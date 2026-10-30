@@ -1,0 +1,25 @@
+name: Compilar Plugin VST3
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configurar CMake
+        run: cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+
+      - name: Compilar
+        run: cmake --build build --config Release
+
+      - name: Subir VST3 compilado
+        uses: actions/upload-artifact@v4
+        with:
+          name: MSC_VOX_Plugin
+          path: |
+            build/**/*.vst3
+            build/**/*.dll
